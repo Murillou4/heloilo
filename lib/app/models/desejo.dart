@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:heloilo/app/models/comentario.dart';
@@ -31,7 +30,7 @@ class Desejo {
       'link': link,
       'image_binary': imageBinary,
       'nivel_de_desejo': nivelDesejo,
-      'comentarios': comentarios?.map((x) => x.toMap()).toList() ?? [{}],
+      'comentarios': comentarios?.map((x) => x.toMap()).toList() ?? [],
     };
   }
 

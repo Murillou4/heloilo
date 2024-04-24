@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
         children: [
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Image.asset(
@@ -58,6 +58,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                const Gap(200),
               ],
             ),
           ),

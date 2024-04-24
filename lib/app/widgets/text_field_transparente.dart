@@ -26,7 +26,7 @@ class _TextFieldTransparenteState extends State<TextFieldTransparente> {
       controller: widget.controller,
       decoration: InputDecoration(
           constraints: const BoxConstraints(
-            maxWidth: 320,
+            maxWidth: 350,
             maxHeight: 50,
           ),
           labelText: widget.label,

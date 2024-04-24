@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:heloilo/app/core/cores.dart';
-
 import '../../services/shared_service.dart';
+import '../../src/scaffold_mensage.dart';
 
 class LoginController {
   static final instance = LoginController();
@@ -29,22 +28,5 @@ class LoginController {
     }
   }
 
-  errorMensage(BuildContext context, String message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: Cores.corTextoSobreCardMurillo,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Cores.corCardMurillo,
-        elevation: 5,
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
+  
 }
