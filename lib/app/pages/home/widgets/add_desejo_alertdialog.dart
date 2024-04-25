@@ -83,6 +83,9 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                       .pickImage(source: ImageSource.gallery);
                   if (imagemFile != null) {
                     imagemData = await imagemFile.readAsBytes();
+                    if (widget.desejo != null) {
+                      widget.desejo!.imageBinary = base64Encode(imagemData!);
+                    }
                     setState(() {});
                   }
                 },
@@ -96,7 +99,7 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                         borderRadius: BorderRadius.circular(10),
                         child: Image.memory(
                           imagemData!,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                           height: 200,
                           width: 350,
                         ),
@@ -159,6 +162,9 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
           onPressed: () async {
             if (tituloController.text.isNotEmpty) {
               if (widget.desejo != null) {
+                widget.desejo!.titulo = tituloController.text;
+                widget.desejo!.link = linkController.text;
+                widget.desejo!.nivelDesejo = nivelDesejo;
                 await HomeController.instance
                     .updateDesejo(widget.desejo!, context);
                 context.mounted ? Navigator.pop(context) : null;

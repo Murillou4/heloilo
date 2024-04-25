@@ -51,8 +51,8 @@ class LoginPage extends StatelessWidget {
                         const Gap(20),
                         BotaoPrincipal(
                           texto: 'Entrar',
-                          onPressed: () =>
-                              LoginController.instance.login(context),
+                          onPressed: () async =>
+                              await LoginController.instance.login(context),
                         ),
                       ],
                     ),

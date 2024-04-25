@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:heloilo/app/models/comentario.dart';
 import 'package:heloilo/app/models/desejo.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
@@ -84,6 +86,34 @@ class SupabaseService {
           'comentarios': listaComentarios,
         }).eq('id', desejo.id!);
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Uint8List?> getProfileImage(String pessoa) async {
+    try {
+      List<FileObject> files = await supabase.storage.from(imagePath).list();
+      String imageName =
+          files.where((element) => element.name.contains(pessoa)).first.name;
+      var imagem = await supabase.storage.from(imagePath).download(imageName);
+      return imagem;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> changeProfileImage(String pessoa, XFile imageFile) async {
+    try {
+      List<FileObject> files = await supabase.storage.from(imagePath).list();
+      List<String> imageName = [
+        files.where((element) => element.name.contains(pessoa)).first.name
+      ];
+      await supabase.storage.from(imagePath).remove(imageName);
+      Uint8List imageData = await imageFile.readAsBytes();
+      await supabase.storage
+          .from(imagePath)
+          .uploadBinary('$pessoa.${imageFile.name.split('.').last}', imageData);
     } catch (e) {
       rethrow;
     }

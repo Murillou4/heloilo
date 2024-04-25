@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedService {
   static final instance = SharedService();
   late final SharedPreferences prefs;
-  init() async {
+  Future<void> init() async {
     prefs = await SharedPreferences.getInstance();
   }
 
@@ -12,11 +12,11 @@ class SharedService {
     return prefs.getString(SharedKeys.whoIsLoged);
   }
   
-  void setWhoIsLoged(String whoIsLoged) async{
+  Future<void> setWhoIsLoged(String whoIsLoged) async{
     await prefs.setString(SharedKeys.whoIsLoged, whoIsLoged);
   }
 
-  void removeWhoIsLoged() async{
+  Future<void> removeWhoIsLoged() async{
     await prefs.remove(SharedKeys.whoIsLoged);
   }
 }
