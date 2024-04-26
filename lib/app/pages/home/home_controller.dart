@@ -12,10 +12,14 @@ import '../../services/supabase_service.dart';
 class HomeController {
   static final instance = HomeController();
 
-  addDesejo(Desejo desejo, BuildContext context) async {
+  Future<void> addDesejo(Desejo desejo, BuildContext context) async {
     showDialog(
-        context: context,
-        builder: (_) => const Center(child: CircularProgressIndicator()));
+      context: context,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
     try {
       await SupabaseService.instance.addDesejo(desejo);
       context.mounted ? Navigator.pop(context) : null;
@@ -24,10 +28,14 @@ class HomeController {
     }
   }
 
-  updateDesejo(Desejo desejo, BuildContext context) async {
+  Future<void> updateDesejo(Desejo desejo, BuildContext context) async {
     showDialog(
-        context: context,
-        builder: (_) => const Center(child: CircularProgressIndicator()));
+      context: context,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
     try {
       await SupabaseService.instance.updateDesejo(desejo);
       context.mounted ? Navigator.pop(context) : null;
@@ -36,10 +44,14 @@ class HomeController {
     }
   }
 
-  removeDesejo(String id, BuildContext context) async {
+  Future<void> removeDesejo(String id, BuildContext context) async {
     showDialog(
-        context: context,
-        builder: (_) => const Center(child: CircularProgressIndicator()));
+      context: context,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
     try {
       await SupabaseService.instance.removeDesejo(id);
       context.mounted ? Navigator.pop(context) : null;
@@ -57,16 +69,5 @@ class HomeController {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<void> changeProfileImage(String pessoa) async {
-    try {
-      XFile? imageFile = await pickImage();
-      if (imageFile != null) {
-        await SupabaseService.instance.changeProfileImage(pessoa, imageFile);
-      } else {
-        return;
-      }
-    } catch (e) {}
   }
 }

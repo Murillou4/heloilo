@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:heloilo/app/data/user_data.dart';
 import 'package:heloilo/app/pages/home/home_controller.dart';
 
+import '../../../core/cores.dart';
 import '../../../services/supabase_service.dart';
 
 class ProfileOptions extends StatefulWidget {
@@ -16,46 +18,41 @@ class _ProfileOptionsState extends State<ProfileOptions> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(100),
-      child: FutureBuilder(
-        future: SupabaseService.instance.getProfileImage(widget.pessoa),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return PopupMenuButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+      child: AnimatedBuilder(
+        animation: UserData.instance,
+        builder: (context, child) {
+          return PopupMenuButton(
+            color: Cores.corDeFundoNeutra,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            splashRadius: 20,
+            offset: const Offset(0, 50),
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  value: 'sair',
+                  child: Text('Sair'),
+                  onTap: () => HomeController.instance.logout(context),
                 ),
-                offset: const Offset(0, 50),
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      value: 'sair',
-                      child: Text('Sair'),
-                      onTap: () => HomeController.instance.logout(context),
-                    ),
-                    PopupMenuItem(
-                      value: 'editar',
-                      child: Text('Editar imagem'),
-                      onTap: () async {
-                        await HomeController.instance
-                            .changeProfileImage(widget.pessoa);
-                        setState(() {});
-                      },
-                    ),
-                  ];
-                },
-                child: Image.memory(
-                  snapshot.data!,
-                  width: 80,
-                  height: 80,
+                PopupMenuItem(
+                  value: 'editar',
+                  child: Text('Editar imagem'),
+                  onTap: () async {
+                    await UserData.instance
+                        .changeProfileImage(widget.pessoa, context);
+                  },
                 ),
-              );
-            } else {
-              return const Text('erro');
-            }
-          } else {
-            return const CircularProgressIndicator();
-          }
+              ];
+            },
+            child: Image.memory(
+              widget.pessoa == 'heloisa'
+                  ? UserData.instance.heloisaImageData!
+                  : UserData.instance.murilloImageData!,
+              width: 80,
+              height: 80,
+            ),
+          );
         },
       ),
     );

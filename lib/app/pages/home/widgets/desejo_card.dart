@@ -1,16 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
+import 'package:heloilo/app/pages/home/home_controller.dart';
 import 'package:heloilo/app/services/shared_service.dart';
 import 'package:heloilo/app/services/supabase_service.dart';
 import 'package:heloilo/app/src/formatar_data.dart';
 import 'package:heloilo/app/src/scaffold_mensage.dart';
 
 import '../../../core/cores.dart';
+import '../../../data/user_data.dart';
 import '../../../models/desejo.dart';
 import 'add_desejo_alertdialog.dart';
+import 'visualizar_desejo_alertdialog.dart';
 
 class DesejoCard extends StatefulWidget {
   const DesejoCard({super.key, required this.desejo});
@@ -52,20 +56,41 @@ class _DesejoCardState extends State<DesejoCard> {
                 ),
               ),
               PopupMenuButton(
+                color: Cores.corDeFundoNeutra,
                 offset: const Offset(40, 20),
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
                       value: 'remover',
-                      child: const Text('Remover'),
+                      child: const ListTile(
+                        title: Text('Apagar'),
+                        trailing: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
                       onTap: () async {
-                        await SupabaseService.instance
-                            .removeDesejo(widget.desejo.id!);
+                        if (SharedService.instance.whoIsLoged() !=
+                            widget.desejo.pessoa) {
+                          errorMensage(
+                            context,
+                            'Você não tem permissão para remover',
+                          );
+                          return;
+                        }
+                        await HomeController.instance
+                            .removeDesejo(widget.desejo.id!, context);
                       },
                     ),
                     PopupMenuItem(
                       value: 'editar',
-                      child: const Text('Editar'),
+                      child: const ListTile(
+                        title: Text('Editar'),
+                        trailing: Icon(
+                          Icons.edit,
+                          color: Colors.blue,
+                        ),
+                      ),
                       onTap: () async {
                         if (SharedService.instance.whoIsLoged() !=
                             widget.desejo.pessoa) {
@@ -76,6 +101,24 @@ class _DesejoCardState extends State<DesejoCard> {
                         showDialog(
                           context: context,
                           builder: (context) => AddDesejoAlertDialog(
+                            desejo: widget.desejo,
+                          ),
+                        );
+                      },
+                    ),
+                    PopupMenuItem(
+                      value: 'ver',
+                      child: const ListTile(
+                        title: Text('Ver'),
+                        trailing: Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      onTap: () async {
+                        showDialog(
+                          context: context,
+                          builder: (context) => VisualizarDesejoAlertDialog(
                             desejo: widget.desejo,
                           ),
                         );
@@ -122,7 +165,6 @@ class _DesejoCardState extends State<DesejoCard> {
           const Gap(15),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 formatarData(DateTime.parse(widget.desejo.data!)),
@@ -134,6 +176,7 @@ class _DesejoCardState extends State<DesejoCard> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const Gap(65),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -160,17 +203,20 @@ class _DesejoCardState extends State<DesejoCard> {
                   ),
                 ],
               ),
-              FutureBuilder(
-                  future: SupabaseService.instance
-                      .getProfileImage(widget.desejo.pessoa),
-                  builder: (context, snapshot) {
-                    return CircleAvatar(
-                      radius: 30,
-                      backgroundImage: MemoryImage(
-                        snapshot.data!,
-                      ),
-                    );
-                  }),
+              const Gap(110),
+              AnimatedBuilder(
+                animation: UserData.instance,
+                builder: (context, snapshot) {
+                  return CircleAvatar(
+                    radius: 30,
+                    backgroundImage: MemoryImage(
+                      widget.desejo.pessoa == 'murillo'
+                          ? UserData.instance.murilloImageData!
+                          : UserData.instance.heloisaImageData!,
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ],
