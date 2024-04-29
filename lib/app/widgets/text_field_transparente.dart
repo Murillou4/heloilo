@@ -25,6 +25,7 @@ class _TextFieldTransparenteState extends State<TextFieldTransparente> {
     return TextField(
       controller: widget.controller,
       decoration: InputDecoration(
+          isDense: true,
           constraints: const BoxConstraints(
             maxWidth: 350,
             maxHeight: 50,

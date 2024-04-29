@@ -62,11 +62,15 @@ class SupabaseService {
       if (listaComentarios == null) {
         await supabase.from('desejos').update({
           'comentarios': [comentario.toMap()],
+          'image_binary':
+              desejo.imageBinary, // Garantir que a imagem seja mantida
         }).eq('id', desejo.id!);
       } else {
         listaComentarios.add(comentario.toMap());
         await supabase.from('desejos').update({
           'comentarios': listaComentarios,
+          'image_binary':
+              desejo.imageBinary, // Garantir que a imagem seja mantida
         }).eq('id', desejo.id!);
       }
     } catch (e) {
@@ -84,6 +88,8 @@ class SupabaseService {
             .removeWhere((element) => element['id'] == comentario.id);
         await supabase.from('desejos').update({
           'comentarios': listaComentarios,
+          'image_binary':
+              desejo.imageBinary, // Garantir que a imagem seja mantida
         }).eq('id', desejo.id!);
       }
     } catch (e) {

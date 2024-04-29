@@ -10,7 +10,7 @@ class Desejo {
   String? link;
   String? imageBinary;
   int nivelDesejo = 1;
-  List<Comentario>? comentarios;
+  List<Comentario> comentarios;
 
   Desejo({
     this.id,
@@ -20,7 +20,7 @@ class Desejo {
     this.link,
     this.imageBinary,
     required this.nivelDesejo,
-    this.comentarios,
+    this.comentarios = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -30,7 +30,7 @@ class Desejo {
       'link': link,
       'image_binary': imageBinary,
       'nivel_de_desejo': nivelDesejo,
-      'comentarios': comentarios?.map((x) => x.toMap()).toList() ?? [],
+      'comentarios': comentarios.map((x) => x.toMap()).toList(),
     };
   }
 

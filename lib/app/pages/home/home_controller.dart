@@ -1,12 +1,8 @@
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:heloilo/app/models/desejo.dart';
 import 'package:heloilo/app/services/shared_service.dart';
-import 'package:heloilo/app/src/image_picker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../services/supabase_service.dart';
 
 class HomeController {
@@ -56,7 +52,9 @@ class HomeController {
       await SupabaseService.instance.removeDesejo(id);
       context.mounted ? Navigator.pop(context) : null;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -67,7 +65,9 @@ class HomeController {
           ? Navigator.pushReplacementNamed(context, '/login')
           : null;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
