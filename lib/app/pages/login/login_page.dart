@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:heloilo/app/core/cores.dart';
 import 'package:heloilo/app/pages/login/login_controller.dart';
@@ -33,12 +34,17 @@ class LoginPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        TextFieldTransparente(
+                        Semantics(
                           label: 'Login',
-                          controller:
-                              LoginController.instance.loginTextController,
-                          icon: Icons.person,
-                          isPassword: false,
+                          hint: 'Insira o seu login',
+                          enabled: true,
+                          child: TextFieldTransparente(
+                            label: 'Login',
+                            controller:
+                                LoginController.instance.loginTextController,
+                            icon: Icons.person,
+                            isPassword: false,
+                          ),
                         ),
                         const SizedBox(height: 10),
                         TextFieldTransparente(

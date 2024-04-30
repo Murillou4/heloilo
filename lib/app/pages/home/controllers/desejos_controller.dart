@@ -1,18 +1,20 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:heloilo/app/models/desejo.dart';
-import 'package:heloilo/app/services/shared_service.dart';
-import '../../services/supabase_service.dart';
 
-class HomeController {
-  static final instance = HomeController();
+import '../../../core/cores.dart';
+import '../../../models/desejo.dart';
+import '../../../services/supabase_service.dart';
+
+class DesejosController {
+  static final instance = DesejosController();
 
   Future<void> addDesejo(Desejo desejo, BuildContext context) async {
     showDialog(
       context: context,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(),
+      builder: (_) => Center(
+        child: CircularProgressIndicator(
+          color: Cores.corDeFundoNeutra,
+        ),
       ),
       barrierDismissible: false,
     );
@@ -27,8 +29,10 @@ class HomeController {
   Future<void> updateDesejo(Desejo desejo, BuildContext context) async {
     showDialog(
       context: context,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(),
+      builder: (_) => Center(
+        child: CircularProgressIndicator(
+          color: Cores.corDeFundoNeutra,
+        ),
       ),
       barrierDismissible: false,
     );
@@ -43,27 +47,16 @@ class HomeController {
   Future<void> removeDesejo(String id, BuildContext context) async {
     showDialog(
       context: context,
-      builder: (_) => const Center(
-        child: CircularProgressIndicator(),
+      builder: (_) => Center(
+        child: CircularProgressIndicator(
+          color: Cores.corDeFundoNeutra,
+        ),
       ),
       barrierDismissible: false,
     );
     try {
       await SupabaseService.instance.removeDesejo(id);
       context.mounted ? Navigator.pop(context) : null;
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-  }
-
-  Future<void> logout(BuildContext context) async {
-    try {
-      await SharedService.instance.removeWhoIsLoged();
-      context.mounted
-          ? Navigator.pushReplacementNamed(context, '/login')
-          : null;
     } catch (e) {
       if (kDebugMode) {
         print(e);

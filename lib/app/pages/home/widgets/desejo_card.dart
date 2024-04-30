@@ -1,12 +1,9 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:heloilo/app/pages/home/home_controller.dart';
+import 'package:heloilo/app/pages/home/controllers/desejos_controller.dart';
 import 'package:heloilo/app/services/shared_service.dart';
-import 'package:heloilo/app/services/supabase_service.dart';
+
 import 'package:heloilo/app/src/formatar_data.dart';
 import 'package:heloilo/app/src/scaffold_mensage.dart';
 
@@ -78,7 +75,7 @@ class _DesejoCardState extends State<DesejoCard> {
                           );
                           return;
                         }
-                        await HomeController.instance
+                        await DesejosController.instance
                             .removeDesejo(widget.desejo.id!, context);
                       },
                     ),

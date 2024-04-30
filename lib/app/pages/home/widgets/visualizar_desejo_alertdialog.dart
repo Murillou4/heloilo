@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:heloilo/app/data/user_data.dart';
+import 'package:heloilo/app/pages/home/widgets/add_comentario_alertdialog.dart';
 import 'package:heloilo/app/services/shared_service.dart';
 import 'package:heloilo/app/src/scaffold_mensage.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,6 +15,7 @@ import '../../../services/supabase_service.dart';
 import '../../../src/formatar_data.dart';
 import '../../../widgets/botao_principal.dart';
 import '../../../widgets/text_field_transparente.dart';
+import 'comentario_listitle.dart';
 
 class VisualizarDesejoAlertDialog extends StatefulWidget {
   const VisualizarDesejoAlertDialog({super.key, required this.desejo});
@@ -30,7 +32,7 @@ class _VisualizarDesejoAlertDialogState
     return AlertDialog(
       backgroundColor: Cores.corDeFundoNeutra,
       content: SizedBox(
-        width: 780,
+        width: 850,
         height: 550,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -43,7 +45,8 @@ class _VisualizarDesejoAlertDialogState
                   Row(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5)),
                         child: widget.desejo.imageBinary != null
                             ? Image.memory(
                                 base64Decode(widget.desejo.imageBinary!),
@@ -55,7 +58,7 @@ class _VisualizarDesejoAlertDialogState
                                 width: 550,
                                 height: 250,
                                 color: Colors.white,
-                                child: Center(
+                                child: const Center(
                                   child: Icon(
                                     Icons.image_not_supported_rounded,
                                     color: Colors.black,
@@ -182,7 +185,7 @@ class _VisualizarDesejoAlertDialogState
                     width: 550,
                     height: 200,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 120, 163, 120),
+                      color: const Color.fromARGB(255, 120, 163, 120),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: Cores.corCardMurillo,
@@ -210,46 +213,9 @@ class _VisualizarDesejoAlertDialogState
                                 )
                               : ListView.separated(
                                   itemBuilder: (context, index) {
-                                    return Card(
-                                      color: Cores.corDeFundoHeloisa,
-                                      child: ListTile(
-                                        title: Text(
-                                          desejo.comentarios[index].pessoa,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        subtitle: Text(
-                                          desejo.comentarios[index].comentario,
-                                          style: TextStyle(
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                        leading: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          child: Image.memory(
-                                            desejo.comentarios[index].pessoa ==
-                                                    'murillo'
-                                                ? UserData
-                                                    .instance.murilloImageData!
-                                                : UserData
-                                                    .instance.heloisaImageData!,
-                                          ),
-                                        ),
-                                        trailing: IconButton(
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
-                                          onPressed: () async {
-                                            await SupabaseService.instance
-                                                .removeComentario(desejo,
-                                                    desejo.comentarios[index]);
-                                          },
-                                        ),
-                                      ),
+                                    return ComentarioListTile(
+                                      comentario: desejo.comentarios[index],
+                                      desejo: desejo,
                                     );
                                   },
                                   separatorBuilder: (context, index) =>
@@ -257,7 +223,9 @@ class _VisualizarDesejoAlertDialogState
                                   itemCount: desejo.comentarios.length,
                                 );
                         }
-                        return const CircularProgressIndicator();
+                        return CircularProgressIndicator(
+                          color: Cores.corDeFundoNeutra,
+                        );
                       },
                     ),
                   ),
@@ -267,62 +235,14 @@ class _VisualizarDesejoAlertDialogState
                       showDialog(
                         context: context,
                         builder: (context) {
-                          TextEditingController comentarioController =
-                              TextEditingController();
-                          return AlertDialog(
-                            backgroundColor: Cores.corCardMurillo,
-                            content: Container(
-                              padding: EdgeInsets.all(8.0),
-                              width: 200,
-                              height: 150,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextFieldTransparente(
-                                    label: 'Comentar',
-                                    controller: comentarioController,
-                                    icon: Icons.comment,
-                                    isPassword: false,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            actionsAlignment: MainAxisAlignment.spaceBetween,
-                            actions: [
-                              BotaoPrincipal(
-                                texto: 'Cancelar',
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              BotaoPrincipal(
-                                texto: 'Comentar',
-                                onPressed: () async {
-                                  if (comentarioController.text.isNotEmpty) {
-                                    Comentario comentario = Comentario(
-                                      pessoa:
-                                          SharedService.instance.whoIsLoged()!,
-                                      comentario: comentarioController.text,
-                                      data: formatarData(DateTime.now()),
-                                      id: Uuid().v4(),
-                                    );
-
-                                    await SupabaseService.instance
-                                        .addComentario(
-                                            widget.desejo, comentario);
-                                    setState(() {});
-                                    context.mounted
-                                        ? Navigator.pop(context)
-                                        : null;
-                                  }
-                                  setState(() {});
-                                },
-                              ),
-                            ],
+                          return AddComentarioAlertDialog(
+                            desejo: widget.desejo,
                           );
                         },
                       );
                     },
                     icon: Icon(
-                      Icons.add_comment_rounded,
+                      Icons.post_add_rounded,
                       color: Cores.corDeFundoHeloisa,
                       size: 30,
                     ),

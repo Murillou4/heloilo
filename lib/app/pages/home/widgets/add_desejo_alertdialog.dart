@@ -1,19 +1,16 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:heloilo/app/core/cores.dart';
 import 'package:heloilo/app/models/desejo.dart';
-import 'package:heloilo/app/pages/home/home_controller.dart';
+import 'package:heloilo/app/pages/home/controllers/desejos_controller.dart';
 import 'package:heloilo/app/src/scaffold_mensage.dart';
 import 'package:heloilo/app/widgets/botao_principal.dart';
 import 'package:heloilo/app/widgets/text_field_transparente.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../services/shared_service.dart';
-import '../../../services/supabase_service.dart';
 
 class AddDesejoAlertDialog extends StatefulWidget {
   const AddDesejoAlertDialog({super.key, this.desejo});
@@ -109,7 +106,7 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
           ),
           const Gap(10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Nivel de Desejo',
@@ -118,7 +115,6 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                   fontSize: 18,
                 ),
               ),
-              const Gap(5),
               DropdownButton<int>(
                 value: nivelDesejo,
                 onChanged: (value) {
@@ -139,11 +135,11 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                   ),
                   DropdownMenuItem(
                     value: 2,
-                    child: Text('2 - Bacana, gostei!'),
+                    child: Text('2 - Bacana, gostei'),
                   ),
                   DropdownMenuItem(
                     value: 3,
-                    child: Text('3 - Caralho, muito foda kkk'),
+                    child: Text('3 - Caralho, muito foda'),
                   ),
                 ],
               ),
@@ -165,7 +161,7 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                 widget.desejo!.titulo = tituloController.text;
                 widget.desejo!.link = linkController.text;
                 widget.desejo!.nivelDesejo = nivelDesejo;
-                await HomeController.instance
+                await DesejosController.instance
                     .updateDesejo(widget.desejo!, context);
                 context.mounted ? Navigator.pop(context) : null;
                 return;
@@ -178,7 +174,7 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                     imagemData == null ? null : base64Encode(imagemData!),
                 nivelDesejo: nivelDesejo,
               );
-              await HomeController.instance.addDesejo(desejo, context);
+              await DesejosController.instance.addDesejo(desejo, context);
               context.mounted ? Navigator.pop(context) : null;
               return;
             } else {

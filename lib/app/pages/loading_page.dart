@@ -11,22 +11,8 @@ class LoadingPage extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Cores.corDeFundoNeutra,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Murillo + Heloisa = Amor <3',
-                style: TextStyle(
-                  color: Cores.corCardMurillo,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const CircularProgressIndicator(),
-              const Text('Carregando...'),
-            ],
+          child: CircularProgressIndicator(
+            color: Cores.corDeFundoHeloisa,
           ),
         ),
       ),

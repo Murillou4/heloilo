@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heloilo/app/data/user_data.dart';
-import 'package:heloilo/app/pages/home/home_controller.dart';
+import 'package:heloilo/app/pages/home/controllers/home_controller.dart';
 
 import '../../../core/cores.dart';
-import '../../../services/supabase_service.dart';
+
 
 class ProfileOptions extends StatefulWidget {
   const ProfileOptions({super.key, required this.pessoa});
