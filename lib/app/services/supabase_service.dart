@@ -77,6 +77,27 @@ class SupabaseService {
     }
   }
 
+  Future<void> updateComentarios(Desejo desejo, Comentario comentario) async {
+    try {
+      var listaComentarios = await getDesejoComentarios(desejo);
+      if (listaComentarios == null) {
+        return;
+      } else {
+        listaComentarios
+            .where((element) => element['id'] == comentario.id)
+            .first
+            .addAll(comentario.toMap());
+        await supabase.from('desejos').update({
+          'comentarios': listaComentarios,
+          'image_binary':
+              desejo.imageBinary, // Garantir que a imagem seja mantida
+        }).eq('id', desejo.id!);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> removeComentario(Desejo desejo, Comentario comentario) async {
     try {
       var listaComentarios = await getDesejoComentarios(desejo);

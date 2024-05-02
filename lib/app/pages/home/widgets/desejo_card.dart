@@ -54,6 +54,7 @@ class _DesejoCardState extends State<DesejoCard> {
               ),
               PopupMenuButton(
                 color: Cores.corDeFundoNeutra,
+                tooltip: 'Mostrar Menu',
                 offset: const Offset(40, 20),
                 itemBuilder: (context) {
                   return [

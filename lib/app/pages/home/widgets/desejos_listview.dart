@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../core/cores.dart';
 import '../../../models/desejo.dart';
 import '../../../services/shared_service.dart';
 import '../../../services/supabase_service.dart';
@@ -56,8 +57,10 @@ class DesejosListView extends StatelessWidget {
             );
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Cores.corDeFundoNeutra,
+            ),
           );
         }
         return const Text('erro');

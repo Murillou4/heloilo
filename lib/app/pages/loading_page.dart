@@ -13,6 +13,7 @@ class LoadingPage extends StatelessWidget {
         body: Center(
           child: CircularProgressIndicator(
             color: Cores.corDeFundoHeloisa,
+            
           ),
         ),
       ),

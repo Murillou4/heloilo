@@ -31,6 +31,28 @@ class ComentariosController {
     }
   }
 
+  Future<void> updateComentarios(
+      Desejo desejo, Comentario comentario, BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (_) => Center(
+        child: CircularProgressIndicator(
+          color: Cores.corDeFundoNeutra,
+        ),
+      ),
+      barrierDismissible: false,
+    );
+    try {
+      await SupabaseService.instance.updateComentarios(desejo, comentario);
+      context.mounted ? Navigator.pop(context) : null;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      context.mounted ? Navigator.pop(context) : null;
+    }
+  }
+
   Future<void> removeComentario(
       Desejo desejo, Comentario comentario, BuildContext context) async {
     showDialog(

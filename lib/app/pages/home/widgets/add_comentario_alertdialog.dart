@@ -13,11 +13,15 @@ import '../../../widgets/botao_principal.dart';
 import '../../../widgets/text_field_transparente.dart';
 
 class AddComentarioAlertDialog extends StatelessWidget {
-  const AddComentarioAlertDialog({super.key, required this.desejo});
+  const AddComentarioAlertDialog(
+      {super.key, required this.desejo, this.comentario});
   final Desejo desejo;
+  final Comentario? comentario;
   @override
   Widget build(BuildContext context) {
-    TextEditingController comentarioController = TextEditingController();
+    TextEditingController comentarioController = comentario == null
+        ? TextEditingController()
+        : TextEditingController(text: comentario!.comentario);
     return AlertDialog(
       backgroundColor: Cores.corCardMurillo,
       content: Container(
@@ -43,24 +47,38 @@ class AddComentarioAlertDialog extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         BotaoPrincipal(
-          texto: 'Comentar',
+          texto: comentario == null ? 'Comentar' : 'Atualizar',
           onPressed: () async {
             if (comentarioController.text.isNotEmpty) {
-              Comentario comentario = Comentario(
-                pessoa: SharedService.instance.whoIsLoged()!,
-                comentario: comentarioController.text,
-                data: formatarData(DateTime.now()),
-                id: const Uuid().v4(),
-              );
-              try {
-                await ComentariosController.instance
-                    .addComentario(desejo, comentario, context);
-                context.mounted ? Navigator.pop(context) : null;
-              } catch (e) {
-                context.mounted
-                    ? errorMensage(context, 'Erro ao comentar')
-                    : null;
-                context.mounted ? Navigator.pop(context) : null;
+              if (comentario == null) {
+                Comentario coment = Comentario(
+                  pessoa: SharedService.instance.whoIsLoged()!,
+                  comentario: comentarioController.text,
+                  data: formatarData(DateTime.now()),
+                  id: const Uuid().v4(),
+                );
+                try {
+                  await ComentariosController.instance
+                      .addComentario(desejo, coment, context);
+                  context.mounted ? Navigator.pop(context) : null;
+                } catch (e) {
+                  context.mounted
+                      ? errorMensage(context, 'Erro ao comentar')
+                      : null;
+                  context.mounted ? Navigator.pop(context) : null;
+                }
+              } else {
+                comentario!.comentario = comentarioController.text;
+                try {
+                  await ComentariosController.instance
+                      .updateComentarios(desejo, comentario!, context);
+                  context.mounted ? Navigator.pop(context) : null;
+                } catch (e) {
+                  context.mounted
+                      ? errorMensage(context, 'Erro ao atualizar')
+                      : null;
+                  context.mounted ? Navigator.pop(context) : null;
+                }
               }
             }
           },
