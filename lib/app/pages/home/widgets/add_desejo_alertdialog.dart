@@ -1,16 +1,14 @@
 import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:heloilo/app/core/cores.dart';
 import 'package:heloilo/app/models/desejo.dart';
 import 'package:heloilo/app/pages/home/controllers/desejos_controller.dart';
-import 'package:heloilo/app/src/scaffold_mensage.dart';
+
 import 'package:heloilo/app/widgets/botao_principal.dart';
 import 'package:heloilo/app/widgets/text_field_transparente.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../../services/shared_service.dart';
 
 class AddDesejoAlertDialog extends StatefulWidget {
   const AddDesejoAlertDialog({super.key, this.desejo});
@@ -20,21 +18,17 @@ class AddDesejoAlertDialog extends StatefulWidget {
 }
 
 class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
-  TextEditingController tituloController = TextEditingController();
-  TextEditingController linkController = TextEditingController();
-
-  int nivelDesejo = 1;
-  Uint8List? imagemData;
   String textoBotao = 'Adicionar';
 
   @override
   void initState() {
     super.initState();
     if (widget.desejo != null) {
-      tituloController.text = widget.desejo!.titulo;
-      linkController.text = widget.desejo!.link ?? '';
-      nivelDesejo = widget.desejo!.nivelDesejo;
-      imagemData = widget.desejo!.imageBinary != null
+      DesejosController.instance.tituloController.text = widget.desejo!.titulo;
+      DesejosController.instance.linkController.text =
+          widget.desejo!.link ?? '';
+      DesejosController.instance.nivelDesejo = widget.desejo!.nivelDesejo;
+      DesejosController.instance.imagemData = widget.desejo!.imageBinary != null
           ? base64Decode(widget.desejo!.imageBinary!)
           : null;
 
@@ -51,14 +45,14 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
         children: [
           TextFieldTransparente(
             label: 'Titulo',
-            controller: tituloController,
+            controller: DesejosController.instance.tituloController,
             icon: Icons.title,
             isPassword: false,
           ),
           const Gap(10),
           TextFieldTransparente(
             label: 'Link',
-            controller: linkController,
+            controller: DesejosController.instance.linkController,
             icon: Icons.link,
             isPassword: false,
           ),
@@ -79,14 +73,16 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                   XFile? imagemFile = await ImagePicker()
                       .pickImage(source: ImageSource.gallery);
                   if (imagemFile != null) {
-                    imagemData = await imagemFile.readAsBytes();
+                    DesejosController.instance.imagemData =
+                        await imagemFile.readAsBytes();
                     if (widget.desejo != null) {
-                      widget.desejo!.imageBinary = base64Encode(imagemData!);
+                      widget.desejo!.imageBinary =
+                          base64Encode(DesejosController.instance.imagemData!);
                     }
                     setState(() {});
                   }
                 },
-                child: imagemData == null
+                child: DesejosController.instance.imagemData == null
                     ? Icon(
                         Icons.add_photo_alternate,
                         size: 50,
@@ -95,7 +91,7 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.memory(
-                          imagemData!,
+                          DesejosController.instance.imagemData!,
                           fit: BoxFit.fill,
                           height: 200,
                           width: 350,
@@ -116,10 +112,10 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
                 ),
               ),
               DropdownButton<int>(
-                value: nivelDesejo,
+                value: DesejosController.instance.nivelDesejo,
                 onChanged: (value) {
                   setState(() {
-                    nivelDesejo = value!;
+                    DesejosController.instance.nivelDesejo = value!;
                   });
                 },
                 borderRadius: BorderRadius.circular(10),
@@ -156,30 +152,25 @@ class _AddDesejoAlertDialogState extends State<AddDesejoAlertDialog> {
         BotaoPrincipal(
           texto: textoBotao,
           onPressed: () async {
-            if (tituloController.text.isNotEmpty) {
-              if (widget.desejo != null) {
-                widget.desejo!.titulo = tituloController.text;
-                widget.desejo!.link = linkController.text;
-                widget.desejo!.nivelDesejo = nivelDesejo;
-                await DesejosController.instance
-                    .updateDesejo(widget.desejo!, context);
-                context.mounted ? Navigator.pop(context) : null;
-                return;
-              }
-              Desejo desejo = Desejo(
-                titulo: tituloController.text,
-                pessoa: SharedService.instance.whoIsLoged()!,
-                link: linkController.text,
-                imageBinary:
-                    imagemData == null ? null : base64Encode(imagemData!),
-                nivelDesejo: nivelDesejo,
-              );
-              await DesejosController.instance.addDesejo(desejo, context);
-              context.mounted ? Navigator.pop(context) : null;
+            if (widget.desejo != null) {
+              bool sucesso = await DesejosController.instance
+                  .updateDesejo(widget.desejo!, context);
+
+              sucesso
+                  ? context.mounted
+                      ? Navigator.pop(context)
+                      : null
+                  : null;
               return;
-            } else {
-              errorMensage(context, 'Preencha o campo de titulo');
             }
+
+            bool sucesso = await DesejosController.instance.addDesejo(context);
+            sucesso
+                ? context.mounted
+                    ? Navigator.pop(context)
+                    : null
+                : null;
+            return;
           },
         )
       ],

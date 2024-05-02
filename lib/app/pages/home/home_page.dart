@@ -21,9 +21,18 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     if (SharedService.instance.whoIsLoged() != null) {
-      corDeFundo = SharedService.instance.whoIsLoged() == 'murillo'
-          ? Cores.corDeFundoMurillo
-          : Cores.corDeFundoHeloisa;
+      switch (SharedService.instance.whoIsLoged()) {
+        case 'murillo':
+          corDeFundo = Cores.corDeFundoMurillo;
+          break;
+        case 'heloisa':
+          corDeFundo = Cores.corDeFundoHeloisa;
+          break;
+        case 'admin':
+          corDeFundo = Cores.corDeFundoNeutra;
+          break;
+        default:
+      }
     }
   }
 
@@ -31,18 +40,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: corDeFundo,
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ProfileOptions(pessoa: SharedService.instance.whoIsLoged()!),
+                padding: EdgeInsets.all(8.0),
+                child: ProfileOptions(),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 220),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 150),
               child: DesejosListView(),
             ),
           ],

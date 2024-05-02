@@ -25,12 +25,14 @@ class _DesejoCardState extends State<DesejoCard> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      width: 500,
-      height: 365,
+      width: 600,
+      height: 450,
       decoration: BoxDecoration(
-        color: widget.desejo.pessoa == 'murillo'
-            ? Cores.corCardMurillo
-            : Cores.corCardHeloisa,
+        color: widget.desejo.pessoa == 'admin'
+            ? Cores.corDeFundoNeutra
+            : widget.desejo.pessoa == 'murillo'
+                ? Cores.corCardMurillo
+                : Cores.corCardHeloisa,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: Colors.black,
@@ -45,9 +47,11 @@ class _DesejoCardState extends State<DesejoCard> {
               Text(
                 widget.desejo.titulo,
                 style: TextStyle(
-                  color: widget.desejo.pessoa == 'murillo'
-                      ? Cores.corTextoSobreCardMurillo
-                      : Colors.white,
+                  color: widget.desejo.pessoa == 'admin'
+                      ? Colors.black
+                      : widget.desejo.pessoa == 'murillo'
+                          ? Cores.corTextoSobreCardMurillo
+                          : Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -69,7 +73,8 @@ class _DesejoCardState extends State<DesejoCard> {
                       ),
                       onTap: () async {
                         if (SharedService.instance.whoIsLoged() !=
-                            widget.desejo.pessoa) {
+                                widget.desejo.pessoa &&
+                            SharedService.instance.whoIsLoged() != 'admin') {
                           errorMensage(
                             context,
                             'Você não tem permissão para remover',
@@ -91,7 +96,8 @@ class _DesejoCardState extends State<DesejoCard> {
                       ),
                       onTap: () async {
                         if (SharedService.instance.whoIsLoged() !=
-                            widget.desejo.pessoa) {
+                                widget.desejo.pessoa &&
+                            SharedService.instance.whoIsLoged() != 'admin') {
                           errorMensage(
                               context, 'Você não tem permissão para editar');
                           return;
@@ -126,17 +132,19 @@ class _DesejoCardState extends State<DesejoCard> {
                 },
                 icon: Icon(
                   Icons.more_vert,
-                  color: widget.desejo.pessoa == 'murillo'
-                      ? Cores.corTextoSobreCardMurillo
-                      : Colors.white,
+                  color: widget.desejo.pessoa == 'admin'
+                      ? Colors.black
+                      : widget.desejo.pessoa == 'murillo'
+                          ? Cores.corTextoSobreCardMurillo
+                          : Colors.white,
                 ),
               ),
             ],
           ),
           const Gap(10),
           Container(
-            width: 450,
-            height: 200,
+            width: 480,
+            height: 280,
             decoration: BoxDecoration(
               color: const Color(0xFFf7f2f9),
               borderRadius: BorderRadius.circular(10),
@@ -155,21 +163,24 @@ class _DesejoCardState extends State<DesejoCard> {
                     child: Image.memory(
                       base64Decode(widget.desejo.imageBinary!),
                       fit: BoxFit.fill,
-                      height: 200,
-                      width: 450,
+                      height: 280,
+                      width: 480,
                     ),
                   ),
           ),
           const Gap(15),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 formatarData(DateTime.parse(widget.desejo.data!)),
                 style: TextStyle(
-                  color: widget.desejo.pessoa == 'murillo'
-                      ? Cores.corTextoSobreCardMurillo
-                      : Colors.white,
+                  color: widget.desejo.pessoa == 'admin'
+                      ? Colors.black
+                      : widget.desejo.pessoa == 'murillo'
+                          ? Cores.corTextoSobreCardMurillo
+                          : Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -182,9 +193,11 @@ class _DesejoCardState extends State<DesejoCard> {
                   Text(
                     'Nivel de Desejo',
                     style: TextStyle(
-                      color: widget.desejo.pessoa == 'murillo'
-                          ? Cores.corTextoSobreCardMurillo
-                          : Colors.white,
+                      color: widget.desejo.pessoa == 'admin'
+                          ? Colors.black
+                          : widget.desejo.pessoa == 'murillo'
+                              ? Cores.corTextoSobreCardMurillo
+                              : Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -192,9 +205,11 @@ class _DesejoCardState extends State<DesejoCard> {
                   Text(
                     widget.desejo.nivelDesejo.toString(),
                     style: TextStyle(
-                      color: widget.desejo.pessoa == 'murillo'
-                          ? Cores.corTextoSobreCardMurillo
-                          : Colors.white,
+                      color: widget.desejo.pessoa == 'admin'
+                          ? Colors.black
+                          : widget.desejo.pessoa == 'murillo'
+                              ? Cores.corTextoSobreCardMurillo
+                              : Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -208,9 +223,11 @@ class _DesejoCardState extends State<DesejoCard> {
                   return CircleAvatar(
                     radius: 30,
                     backgroundImage: MemoryImage(
-                      widget.desejo.pessoa == 'murillo'
-                          ? UserData.instance.murilloImageData!
-                          : UserData.instance.heloisaImageData!,
+                      widget.desejo.pessoa == 'admin'
+                          ? UserData.instance.adminImageData!
+                          : widget.desejo.pessoa == 'murillo'
+                              ? UserData.instance.murilloImageData!
+                              : UserData.instance.heloisaImageData!,
                     ),
                   );
                 },

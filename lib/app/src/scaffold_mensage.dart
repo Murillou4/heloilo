@@ -14,9 +14,8 @@ errorMensage(BuildContext context, String message) {
       ),
       backgroundColor: Cores.corCardMurillo,
       elevation: 5,
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.all(10),
-      duration: Duration(seconds: 2),
+      behavior: SnackBarBehavior.fixed,
+      duration: const Duration(seconds: 2),
     ),
   );
 }

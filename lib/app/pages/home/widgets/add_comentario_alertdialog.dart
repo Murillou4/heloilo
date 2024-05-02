@@ -19,7 +19,7 @@ class AddComentarioAlertDialog extends StatelessWidget {
   final Comentario? comentario;
   @override
   Widget build(BuildContext context) {
-    TextEditingController comentarioController = comentario == null
+    ComentariosController.instance.comentarioController = comentario == null
         ? TextEditingController()
         : TextEditingController(text: comentario!.comentario);
     return AlertDialog(
@@ -33,7 +33,7 @@ class AddComentarioAlertDialog extends StatelessWidget {
           children: [
             TextFieldTransparente(
               label: 'Comentar',
-              controller: comentarioController,
+              controller: ComentariosController.instance.comentarioController,
               icon: Icons.comment,
               isPassword: false,
             ),
@@ -49,36 +49,30 @@ class AddComentarioAlertDialog extends StatelessWidget {
         BotaoPrincipal(
           texto: comentario == null ? 'Comentar' : 'Atualizar',
           onPressed: () async {
-            if (comentarioController.text.isNotEmpty) {
-              if (comentario == null) {
-                Comentario coment = Comentario(
-                  pessoa: SharedService.instance.whoIsLoged()!,
-                  comentario: comentarioController.text,
-                  data: formatarData(DateTime.now()),
-                  id: const Uuid().v4(),
-                );
-                try {
-                  await ComentariosController.instance
-                      .addComentario(desejo, coment, context);
-                  context.mounted ? Navigator.pop(context) : null;
-                } catch (e) {
-                  context.mounted
-                      ? errorMensage(context, 'Erro ao comentar')
-                      : null;
-                  context.mounted ? Navigator.pop(context) : null;
-                }
-              } else {
-                comentario!.comentario = comentarioController.text;
-                try {
-                  await ComentariosController.instance
-                      .updateComentarios(desejo, comentario!, context);
-                  context.mounted ? Navigator.pop(context) : null;
-                } catch (e) {
-                  context.mounted
-                      ? errorMensage(context, 'Erro ao atualizar')
-                      : null;
-                  context.mounted ? Navigator.pop(context) : null;
-                }
+            if (comentario == null) {
+              try {
+                await ComentariosController.instance
+                    .addComentario(desejo, context);
+                context.mounted ? Navigator.pop(context) : null;
+              } catch (e) {
+                context.mounted
+                    ? errorMensage(context, 'Erro ao comentar')
+                    : null;
+                context.mounted ? Navigator.pop(context) : null;
+              }
+            } else {
+              comentario!.comentario =
+                  ComentariosController.instance.comentarioController.text;
+              try {
+                await ComentariosController.instance
+                    .updateComentarios(desejo, comentario!, context);
+                context.mounted ? Navigator.pop(context) : null;
+                
+              } catch (e) {
+                context.mounted
+                    ? errorMensage(context, 'Erro ao atualizar')
+                    : null;
+                context.mounted ? Navigator.pop(context) : null;
               }
             }
           },

@@ -9,12 +9,13 @@ class UserData extends ChangeNotifier {
 
   Uint8List? heloisaImageData;
   Uint8List? murilloImageData;
-
+  Uint8List? adminImageData;
   Future<void> carregarImagensPerfils() async {
     heloisaImageData =
         await SupabaseService.instance.getProfileImage('heloisa');
     murilloImageData =
         await SupabaseService.instance.getProfileImage('murillo');
+    adminImageData = await SupabaseService.instance.getProfileImage('admin');
     notifyListeners();
   }
 
